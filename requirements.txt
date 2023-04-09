@@ -1,0 +1,3 @@
+logbook
+selenium
+lxml==4.9.2
