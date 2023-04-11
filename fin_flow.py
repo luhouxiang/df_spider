@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 @author: luhx
-@file: financial_flow.py
+@file: fin_flow.py
 @time: 2023/4/10 20:35
 @desc: 资金流
 """
 from selenium import webdriver
 import time
-import re
-import csv  # 存储数据
 from lxml import etree  # 数据的解析
 from kds_util.user_logbook import user_log as logger
 
 
-class FinancialFlow:
+class FinFlow:
     """
     资金流
     """
@@ -52,6 +50,6 @@ class FinancialFlow:
 
 
 if __name__ == '__main__':
-    fina = FinancialFlow()
+    fina = FinFlow()
     fina.parse_table()
     logger.info("work end.")
