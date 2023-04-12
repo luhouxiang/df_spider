@@ -5,7 +5,10 @@
 @time: 2023/4/11 21:59
 @desc: 获取东方财富的当前交易日，为板块资金流写入表奠定交易日的逻辑
 """
+import random
+
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import time
 from lxml import etree  # 数据的解析
 from kds_util.user_logbook import user_log as logger
@@ -16,13 +19,9 @@ class FinTradingDay:
     东方财富网站交易日
     """
     def __init__(self):
-        option = webdriver.ChromeOptions()  # 网址获取
-        # option.add_argument('headless')  # 无界面启动,即设置浏览器静默
-        self.driver = webdriver.Chrome(options=option)  # 等价于 options.headless=True
+        self.driver = None
         self.mytree = None
-
-        self.from_http()
-        # self.from_file()
+        self.kline_time: str = ""   # K线数据时间
 
     def save_html(self):
         f = open("./data/zs000001.html", "wb")
@@ -33,18 +32,26 @@ class FinTradingDay:
         self.mytree = etree.parse('./data/zs000001.html', etree.HTMLParser())
 
     def from_http(self):
-        logger.info("will get url...")
-        self.driver.get('http://quote.eastmoney.com/zs000001.html')
+        url = "http://quote.eastmoney.com/zs000001.html"
+        logger.info("will get url: {}".format(url))
+        self.driver.get(url)
         # self.save_html()
 
-    def parse_table(self):
-        logger.info("wait_time begin...")
-        # self.driver.implicitly_wait(10)
-        # logger.info("wait_time begin...")
-        # time.sleep(10)
-        # logger.info("wait_time end.")
-        #
+    def init_trading_day(self):
+        while True:
+            if self.parse_table():
+                break
+            seconds = random.randint(3, 10)
+            logger.info("will wait {} seconds for get trading day again.".format(seconds))
+            time.sleep(seconds)
 
+    def parse_table(self):
+        chrome_options = Options()
+        chrome_options.add_argument('--disable-browser-side-navigation')
+        # chrome_options.add_argument('--headless')
+        self.driver = webdriver.Chrome(options=chrome_options)  # 等价于 options.headless=True
+        self.from_http()
+        # self.from_file()
         while True:
             time.sleep(1)
             self.mytree = etree.HTML(self.driver.page_source)
@@ -61,12 +68,17 @@ class FinTradingDay:
                 continue
             print(etree.tostring(table2[0], encoding="utf-8", pretty_print=True, method="html").decode("utf-8"))
             text = table2[0].xpath('./text()')[0]
-            print(f"当前交易日：{text[1:11].replace('-', '')}")
+            print(f"当前上证指数K线时间：{text[1:11]} {text[-9:-1]}")
+            self.kline_time = f"{text[1:11]} {text[-9:-1]}"
+            self.save_html()
             break
+        self.driver.quit()
+
+        return len(self.kline_time) >= 19
 
 
 if __name__ == '__main__':
     fin = FinTradingDay()
-    fin.parse_table()
-    fin.driver.quit()
+    fin.init_trading_day()
+
     logger.info("work end.")
