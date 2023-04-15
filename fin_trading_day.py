@@ -68,7 +68,10 @@ class FinTradingDay:
             options.add_experimental_option("excludeSwitches", ["enable-automation"])
             options.add_experimental_option("useAutomationExtension", False)
             options.add_argument('--disable-browser-side-navigation')
+            options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--no-sandbox')    # 在root权限下跑
             options.add_argument('--headless')
+            options.add_argument('--disable-gpu')
             self.driver = webdriver.Chrome(options=options)  # 等价于 options.headless=True
 
             self.from_http()
