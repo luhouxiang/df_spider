@@ -21,12 +21,9 @@ class FinFlow:
     """
     资金流
     """
-
     def __init__(self):
-        # option = webdriver.ChromeOptions()  # 网址获取
-        # option.add_argument('headless')  # 无界面启动,即设置浏览器静默
         self.fin_day_info: FinTradingDay = FinTradingDay()
-        self.driver = None  # webdriver.Chrome(options=option)  # 等价于 options.headless=True
+        self.driver = None
         self.mytree = None
 
         self.from_http()
