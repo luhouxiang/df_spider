@@ -23,10 +23,10 @@ class FinFlow:
     """
 
     def __init__(self):
-        option = webdriver.ChromeOptions()  # 网址获取
-        option.add_argument('headless')  # 无界面启动,即设置浏览器静默
+        # option = webdriver.ChromeOptions()  # 网址获取
+        # option.add_argument('headless')  # 无界面启动,即设置浏览器静默
         self.fin_day_info: FinTradingDay = FinTradingDay()
-        self.driver = webdriver.Chrome(options=option)  # 等价于 options.headless=True
+        self.driver = None  # webdriver.Chrome(options=option)  # 等价于 options.headless=True
         self.mytree = None
 
         self.from_http()
@@ -41,6 +41,17 @@ class FinFlow:
         self.mytree = etree.parse('./data/bk_zj01.html', etree.HTMLParser())
 
     def from_http(self):
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        options.add_argument('--disable-browser-side-navigation')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-setuid-sandbox')
+        options.add_argument('--no-sandbox')  # 在root权限下跑
+        options.add_argument('--headless')
+        options.add_argument('--disable-gpu')
+        self.driver = webdriver.Chrome(options=options)  # 等价于 options.headless=True
+
         self.driver.get('https://data.eastmoney.com/bkzj/hy.html')
         time.sleep(2)
         self.mytree = etree.HTML(self.driver.page_source)

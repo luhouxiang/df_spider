@@ -59,10 +59,6 @@ class FinTradingDay:
         Envs.mysql.exec(sql)
 
     def parse_table(self):
-        # chrome_options = Options()
-        # chrome_options.add_argument('--disable-browser-side-navigation')
-        # # chrome_options.add_argument('--headless')
-        # self.driver = webdriver.Chrome(options=chrome_options)  # 等价于 options.headless=True
         try:
             options = webdriver.ChromeOptions()
             options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -101,7 +97,7 @@ class FinTradingDay:
             logger.error("error: {}".format(traceback.format_exc()))
         finally:
             time.sleep(1)
-            # self.driver.quit()
+            self.driver.quit()
         return len(self.kline_time) >= 19
 
 
