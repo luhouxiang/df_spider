@@ -69,6 +69,7 @@ class FinTradingDay:
             options.add_experimental_option("useAutomationExtension", False)
             options.add_argument('--disable-browser-side-navigation')
             options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--disable-setuid-sandbox')
             options.add_argument('--no-sandbox')    # 在root权限下跑
             options.add_argument('--headless')
             options.add_argument('--disable-gpu')
@@ -100,7 +101,7 @@ class FinTradingDay:
             logger.error("error: {}".format(traceback.format_exc()))
         finally:
             time.sleep(1)
-            self.driver.quit()
+            # self.driver.quit()
         return len(self.kline_time) >= 19
 
 
