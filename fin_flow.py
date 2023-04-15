@@ -147,7 +147,7 @@ class FinFlow:
 
 
 if __name__ == '__main__':
-    init_logger("../log", "df_spider")
+    init_logger("./log", "df_spider")
     fina = FinFlow()
     fina.parse_table()
     logger.info("work end.")
