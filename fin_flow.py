@@ -8,7 +8,7 @@
 from selenium import webdriver
 import time
 from lxml import etree  # 数据的解析
-from kds_util.user_logbook import user_log as logger
+from kds_util.user_logbook import user_log as logger, init_logger
 
 from envs import Envs
 from obj import FinFlowItem
@@ -147,6 +147,7 @@ class FinFlow:
 
 
 if __name__ == '__main__':
+    init_logger("../log", "df_spider")
     fina = FinFlow()
     fina.parse_table()
     logger.info("work end.")
